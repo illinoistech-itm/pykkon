@@ -5,4 +5,4 @@ INSTALL
 ------------
 On Initiator, run:
 
-$ initiator_setup.sh
+$ bash initiator_setup.sh
