@@ -5,4 +5,8 @@ INSTALL
 ------------
 On Initiator, run:
 
-$ bash initiator_setup.sh
+$ bash iSCSI-initiator-setup.sh
+
+On Target, run:
+
+$ bash iSCSI-target-setup.sh
