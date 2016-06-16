@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  # config.vm.network "public_network"
+  config.vm.network "public_network", bridge: "enp0s3"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -48,13 +48,13 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
+  config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
   #
-  #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+  # Customize the amount of memory on the VM:
+   vb.memory = "2048"
+  end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -70,19 +70,22 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   
-  # update, enable the target
+  # update ubuntu, install iscsitarget, enable it
+  # create a new partition into sda1 and mount into /data
+  # write the target name and LUN 0 into iet.conf file and restart the target service
   config.vm.provision "shell", inline: <<-SHELL
-     sudo apt-get --yes --force-yes update
-     sudo apt-get --yes --force-yes upgrade
-     sudo apt-get --yes --force-yes install iscsitarget
-     sudo apt-get --yes --force-yes install iscsitarget-dkms
-     sudo sed -i 's/ISCSITARGET_ENABLE=false/ISCSITARGET_ENABLE=true/' /etc/default/iscsitarget
-     echo -e "n\np\n3\n2048\n4096\nw\nq" | sudo fdisk /dev/sda1
-     sudo /sbin/mkfs -t ext3 /dev/sda1p3 2M
-     sudo mount /dev/sda1p3 /data/
+     apt-get --yes --force-yes update
+     apt-get --yes --force-yes upgrade
+     apt-get --yes --force-yes install iscsitarget
+     apt-get --yes --force-yes install iscsitarget-dkms
+     sed -i 's/ISCSITARGET_ENABLE=false/ISCSITARGET_ENABLE=true/' /etc/default/iscsitarget
+     echo -e "n\np\n3\n2048\n4096\nw\nq" | fdisk /dev/sda1
+     /sbin/mkfs -t ext3 /dev/sda1p3 2M
+     mkdir /data/
+     mount /dev/sda1p3 /data/
      echo "Partition sda1p3 file system created and mounted on /data/. iscsitarget service restarted."
-     sudo echo "iqn.2016-06.local.iit:storage.sys0" >> /etc/iet/ietd.conf
-     sudo echo "Lun 0 Path=/dev/sda1p3,Type=fileio,ScsiId=lun0,ScsiSN=lun0" >> /etc/iet/ietd.conf
-     sudo service iscsitarget restart
+     echo "iqn.2016-06.local.iit:storage.sys0" >> /etc/iet/ietd.conf
+     echo "Lun 0 Path=/dev/sda1p3,Type=fileio,ScsiId=lun0,ScsiSN=lun0" >> /etc/iet/ietd.conf
+     service iscsitarget restart
   SHELL
 end
