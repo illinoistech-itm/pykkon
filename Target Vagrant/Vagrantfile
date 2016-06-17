@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  config.vm.network "public_network", bridge: "enp0s3"
+  config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -80,7 +80,7 @@ Vagrant.configure("2") do |config|
      apt-get --yes --force-yes install iscsitarget-dkms
      sed -i 's/ISCSITARGET_ENABLE=false/ISCSITARGET_ENABLE=true/' /etc/default/iscsitarget
      echo -e "n\np\n3\n2048\n4096\nw\nq" | fdisk /dev/sda1
-     /sbin/mkfs -t ext3 /dev/sda1p3 2M
+     /sbin/mkfs -t ext3 /dev/sda1p3 1M
      mkdir /data/
      mount /dev/sda1p3 /data/
      echo "Partition sda1p3 file system created and mounted on /data/. iscsitarget service restarted."
