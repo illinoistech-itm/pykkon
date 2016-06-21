@@ -1,4 +1,5 @@
-# Simple script that sends a ICMP Packet
+# Simple script that sends a ICMP Packet with any written 
+# message
 
 # Import Scapy library and all its dependencies
 from scapy.all import *
