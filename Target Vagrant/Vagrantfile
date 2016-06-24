@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/xenial64"
-  config.vm.box_url = "https://atlas.hashicorp.com/ubuntu/xenial64"
+  config.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/xenial64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  config.vm.network "public_network", ip: "192.168.1.150"
+  config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -54,25 +54,8 @@ Vagrant.configure("2") do |config|
   #
   # Customize the amount of memory on the VM:
    vb.memory = "2048"
-   vb.name = "ubuntu-xenial-16.04-target"
+   vb.name = "ubuntu-xenion-16.04-target"
 
-    file_to_disk = File.realpath( "." ).to_s + "/disk.vdi"
-
-    if ARGV[0] == "up" && ! File.exist?(file_to_disk)
-       vb.customize [
-            'createhd',
-            '--filename', file_to_disk,
-            '--format', 'VDI',
-            '--size', 1 # 1MB
-            ]
-       vb.customize [
-            'storageattach', :id,
-            '--storagectl', 'SATA Controller', # The name may vary
-            '--port', 1, '--device', 0,
-            '--type', 'hdd', '--medium',
-            file_to_disk
-            ]
-    end
   end
   #
   # View the documentation for the provider you are using for more
@@ -93,20 +76,20 @@ Vagrant.configure("2") do |config|
   # create a new partition into sda1 and mount into /data
   # write the target name and LUN 0 into iet.conf file and restart the target service
   config.vm.provision "shell", inline: <<-SHELL
-     apt-get --yes --force-yes update
-     apt-get --yes --force-yes upgrade
-     route add default gw 192.168.1.1
-     apt-get --yes --force-yes install iscsitarget
-     apt-get --yes --force-yes install iscsitarget-dkms
-     sed -i 's/ISCSITARGET_ENABLE=false/ISCSITARGET_ENABLE=true/' /etc/default/iscsitarget
-     /sbin/mkfs -t ext4 /dev/sdb 10M
-     mkdir /data/
-     cd /data/
-     echo "Test ISCSI File" >> test
-     mount /dev/sdb /data/
-     echo "Partition sdb file system created and mounted on /data/. iscsitarget service restarted."
-     echo "Target iqn.2016-06.local.iit:storage.sys0" >> /etc/iet/ietd.conf
-     echo "		Lun 0 Path=/dev/sdb,Type=fileio,ScsiId=lun0,ScsiSN=lun0" >> /etc/iet/ietd.conf
-     service iscsitarget restart
+    sudo apt-get --yes update
+    sudo apt-get --yes --force-yes upgrade
+    sudo route add default gw 192.168.1.1
+    sudo apt-get --yes --force-yes install iscsitarget
+    sudo apt-get --yes --force-yes install iscsitarget-dkms
+    sudo sed -i 's/ISCSITARGET_ENABLE=false/ISCSITARGET_ENABLE=true/' /etc/default/iscsitarget
+    echo -e "n\np\n3\n2048\n4096\nw\nq" | fdisk /dev/sda1
+    sudo /sbin/mkfs -t ext4 /dev/sda1p3 2M
+    sudo mkdir /data/
+    sudo mount /dev/sda1p3 /data/
+    echo "Partition sda1p3 file system created and mounted on /data/. iscsitarget service restarted."
+    sudo echo "Test ISCSI File" > /data/test.txt
+    sudo echo "Target iqn.2016-06.local.iit:storage.sys0" >> /etc/iet/ietd.conf
+    sudo echo "		Lun 0 Path=/dev/sda1p3,Type=fileio,ScsiId=lun0,ScsiSN=lun0" >> /etc/iet/ietd.conf
+    sudo service iscsitarget restart
   SHELL
 end
