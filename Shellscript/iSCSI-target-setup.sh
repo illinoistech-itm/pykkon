@@ -5,9 +5,10 @@
 
 sudo /sbin/mkfs -t ext4 /dev/sda1p3 2M
 
-# Mount the disk storage:
+# Mount the disk storage and create test file:
 
 sudo mount /dev/sda1p3 /data/
+sudo echo "Test ISCSI File" > /data/test.txt
 
 # Restart Target:
 
