@@ -7,10 +7,19 @@ INSTALL
 
 2.a - On Initiator, run:
 
-$ bash sudo iscsiadm -m discovery -t st -p "target_ip" 
+	$ bash sudo iscsiadm -m discovery -t st -p "target_ip" 
 
-$ bash sudo iscsiadm -m node -T "iqn.2016-06.local.iit:storage.sys0" -p "target_ip" --login
+	$ bash sudo iscsiadm -m node -T "iqn.2016-06.local.iit:storage.sys0" -p "target_ip" --login
 
-2.b - On Target, make sure iscsitarget service is running:
+	- after login, a disk is created to represent the iSCSI target LUN.	Such disk can be on sdb, sdc or sdd, accordingly with the order it was found. Check which one represents the iSCSI Target LUN running the command "sudo fdisk -l". The disk representing the iSCSI Target LUN has 2MB of size.
 
-$ bash netstat -tl
+	- Once the disk was identified, run $ sudo mount /dev/sd(b|c|d) /mnt to access the Target LUN.
+
+2.b - On Target:
+
+	- make sure iscsitarget service is running:
+
+		$ bash netstat -tl
+
+  	- download, add execution permissions and run the iSCSI-target-setup.sh if you want to test a new file being available in the LUN 0.
+
