@@ -1,13 +1,15 @@
 #!/bin/bash
-# iSCSI Target machine Script using the following VM: https://drive.google.com/drive/folders/0B3zw9iQqnZcSNjBDZXpmMnhiWEE
+# iSCSI Target machine Script using the following VM: 
 
 # First create the Disk Storage:
 
-sudo /sbin/mkfs -t ext3 /dev/sda1p3 2M
+sudo /sbin/mkfs -t ext4 /dev/sda1p3 2M
 
-# Mount the disk storage:
-
+# Mount the disk storage (umount if it is already mounted) and create test file:
+sudo rm /data/*.txt
+sudo umount /dev/sda1p3
 sudo mount /dev/sda1p3 /data/
+sudo echo "Test ISCSI File" > /data/test.txt
 
 # Restart Target:
 

@@ -3,10 +3,14 @@ This is a repo that contains code for creating a system to hijack and insert dat
 
 INSTALL
 ------------
-On Initiator, run:
+1 - Open Target and Initiator .Vagrantfile folder and run $ bash vagrant up
 
-$ bash iSCSI-initiator-setup.sh
+2.a - On Initiator, run:
 
-On Target, run:
+$ bash sudo iscsiadm -m discovery -t st -p "target_ip" 
 
-$ bash iSCSI-target-setup.sh
+$ bash sudo iscsiadm -m node -T "iqn.2016-06.local.iit:storage.sys0" -p "target_ip" --login
+
+2.b - On Target, make sure iscsitarget service is running:
+
+$ bash netstat -tl
