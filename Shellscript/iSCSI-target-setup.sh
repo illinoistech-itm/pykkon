@@ -1,5 +1,5 @@
 #!/bin/bash
-# iSCSI Target machine Script using the following VM: 
+# iSCSI Target machine Script to be run after modifying the file in the LUN 0.
 
 # First create the Disk Storage:
 
