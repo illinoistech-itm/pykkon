@@ -23,3 +23,12 @@ INSTALL
 
   	- download, add execution permissions and run the iSCSI-target-setup.sh if you want to test a new file being available in the LUN 0.
 
+
+ 3 - MiTM machine:
+
+ 	- Download .ova machine on https://drive.google.com/open?id=0B4MZu1rZKHeDaC1WUkdGc1BhZGc
+
+ 	- import appliance on Virtualbox. Use username as root and password as admin.
+
+ 	- Run mitm-arp.py script to begin the man in the middle attack on initiator and target
+
