@@ -21,10 +21,10 @@ def handle_packet(packet):
         packet[Ether].dst = GATEWAY_MAC
         # TODO: block iscsi packets with an if condition
         if(packet[TCP]):
-           # sprintf("{Raw:%Raw.load%\n}")
-            print str(packet) + "\n"
+           # shows what the packet contains
+           packet.show()
+           # TODO: create condition to check/filter the 'dport' packet tcp argument for 'iscsi_target'
         sendp(packet)
         print "A packet from " + packet[IP].src + " redirected!"
-        #printing redirected packets load
-        #sprintf("{Raw:%Raw.load%\n}")
+
 sniff(prn=handle_packet, filter=filter, iface=iface, store=0)
