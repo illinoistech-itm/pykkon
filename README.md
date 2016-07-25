@@ -7,13 +7,11 @@ INSTALL
 
 2.a - On Initiator, run:
 
-	$ bash sudo iscsiadm -m discovery -t st -p "target_ip" 
-
-	$ bash sudo iscsiadm -m node -T "iqn.2016-06.local.iit:storage.sys0" -p "target_ip" --login
+	- Run the iSCSI-initiator-setup.sh in the root folder. That script contains commands to discover and login to a target LUN. You have to provide the target machine IP as required by the script.
 
 	- after login, a disk is created to represent the iSCSI target LUN.	Such disk can be on sdb, sdc or sdd, accordingly with the order it was found. Check which one represents the iSCSI Target LUN running the command "sudo fdisk -l". The disk representing the iSCSI Target LUN has 2MB of size.
 
-	- Once the disk was identified, run $ sudo mount /dev/sd(b|c|d) /mnt to access the Target LUN.
+	- Once the disk was identified, open /mnt directory to access the Target LUN. A mounting command was issued to serve the disk in such folder.
 
 2.b - On Target:
 
@@ -21,7 +19,7 @@ INSTALL
 
 		$ bash netstat -tl
 
-  	- download, add execution permissions and run the iSCSI-target-setup.sh if you want to test a new file being available in the LUN 0.
+  	- download, add execution permissions and run the iSCSI-target-setup.sh if you want to test a new file being available in the LUN 0. Also run the script on up after halting the machine.
 
 
  3 - MiTM machine:
@@ -30,5 +28,7 @@ INSTALL
 
  	- import appliance on Virtualbox. Use username as root and password as admin.
 
- 	- Run mitm-arp.py script to begin the man in the middle attack on initiator and target
+ 	- Insert target and initiator IPs on mitm-arp.py script and run to begin arp poisoning.
+
+ 	- Insert target and initiator IPs and MACs on ip_forward.py and run to start the packet sniffing, forwarding and injection.
 
