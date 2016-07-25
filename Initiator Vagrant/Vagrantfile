@@ -17,7 +17,8 @@ Vagrant.configure("2") do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "ubuntu/xenial64"
-  config.vm.box_url = "https://atlas.hashicorp.com/ubuntu/xenial64"
+  config.vm.box_url = "https://vagrantcloud.com/ubuntu/boxes/xenial64"
+  # config.vm.provision :shell, path: "Initiator_setup.sh"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -31,12 +32,12 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  # config.vm.network "private_network", ip: "192.168.1.150"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
   # your network.
-  # config.vm.network "public_network"
+  config.vm.network "public_network"
 
   # Share an additional folder to the guest VM. The first argument is
   # the path on the host to the actual folder. The second argument is
@@ -48,13 +49,15 @@ Vagrant.configure("2") do |config|
   # backing providers for Vagrant. These expose provider-specific options.
   # Example for VirtualBox:
   #
-  # config.vm.provider "virtualbox" do |vb|
+  config.vm.provider "virtualbox" do |vb|
   #   # Display the VirtualBox GUI when booting the machine
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-  #   vb.memory = "1024"
-  # end
+     vb.memory = "1024"
+     vb.name = "initiator"
+
+   end
   #
   # View the documentation for the provider you are using for more
   # information on available options.
@@ -69,21 +72,25 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  
+
   # update, enable the initiator
   config.vm.provision "shell", inline: <<-SHELL
+     echo Initiator set up:
+     sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost localhost.localdomain ubuntu-xenial/' /etc/hosts
      sudo apt-get --yes --force-yes update
      sudo apt-get --yes --force-yes upgrade
+     route add default gw 192.168.1.1
      sudo apt-get --yes --force-yes install open-iscsi
+     echo changing archives
      sudo sed -i 's/node.startup = manual/# node.startup = manual/' /etc/iscsi/iscsid.conf
      sudo sed -i 's/# node.startup = automatic/node.startup = automatic/' /etc/iscsi/iscsid.conf
-     echo Insert target IP address:
-     read ip
-     sudo iscsiadm -m discovery -t st -p $ip
-     sudo iscsiadm -m node -T "iqn.2016-06.local.iit:storage.sys0" -p "$ip:3260" --login
-     echo -e "n\np\n3\n2048\n4096\nw\n" | sudo fdisk /dev/sda
-     sudo mkfs.ext4 /dev/sda3
-     sudo mount -t ext4 /dev/sda3 /mnt
-     sudo umount /dev/sda3
+     sudo sed -i 's/# By default this script does nothing./sudo ifconfig enp0s8 mtu 5000 || exit 1/' /etc/rc.local
+     cd /
+     sudo wget https://raw.githubusercontent.com/Illinois-tech-ITM/BSMP-2016-ISCSI-Packet-Injection/Vagrant-Config/Shellscript/iSCSI-initiator-setup.sh
+     sudo chmod 755 iSCSI-initiator-setup.sh
+
+     sudo wget https://raw.githubusercontent.com/Illinois-tech-ITM/BSMP-2016-ISCSI-Packet-Injection/Vagrant-Config/Shellscript/iSCSI-initiator-logout.sh
+     sudo chmod 755 iSCSI-initiator-logout.sh
+
   SHELL
 end
