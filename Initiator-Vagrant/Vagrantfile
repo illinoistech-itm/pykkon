@@ -79,13 +79,13 @@ Vagrant.configure("2") do |config|
      sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost localhost.localdomain ubuntu-xenial/' /etc/hosts
      sudo apt-get --yes --force-yes update
      sudo apt-get --yes --force-yes upgrade
-     route add default gw 192.168.1.1
+     #route add default gw 192.168.1.1
      sudo apt-get --yes --force-yes install open-iscsi
-     echo changing archives
+     echo "Changing archives..."
      sudo sed -i 's/node.startup = manual/# node.startup = manual/' /etc/iscsi/iscsid.conf
      sudo sed -i 's/# node.startup = automatic/node.startup = automatic/' /etc/iscsi/iscsid.conf
      sudo sed -i 's/# By default this script does nothing./sudo ifconfig enp0s8 mtu 5000 || exit 1/' /etc/rc.local
-     cd /
+     
      sudo wget https://raw.githubusercontent.com/illinoistech-itm/pykkon/Vagrant-Config/Shellscript/iSCSI-initiator-setup.sh
      sudo chmod 755 iSCSI-initiator-setup.sh
 
