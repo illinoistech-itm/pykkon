@@ -93,7 +93,7 @@ Vagrant.configure("2") do |config|
     sudo echo "		Lun 0 Path=/dev/sda1p3,Type=fileio,ScsiId=lun0,ScsiSN=lun0" >> /etc/iet/ietd.conf
     sudo service iscsitarget restart
     cd /
-    sudo wget https://raw.githubusercontent.com/Illinois-tech-ITM/pykkon/Vagrant-Config/Shellscript/iSCSI-target-setup.sh
+    sudo wget https://raw.githubusercontent.com/illinoistech-itm/pykkon/Vagrant-Config/Shellscript/iSCSI-target-setup.sh
     sudo chmod 755 iSCSI-target-setup.sh
   SHELL
 end
