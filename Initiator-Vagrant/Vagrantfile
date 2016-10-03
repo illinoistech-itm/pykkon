@@ -86,10 +86,10 @@ Vagrant.configure("2") do |config|
      sudo sed -i 's/# node.startup = automatic/node.startup = automatic/' /etc/iscsi/iscsid.conf
      sudo sed -i 's/# By default this script does nothing./sudo ifconfig enp0s8 mtu 5000 || exit 1/' /etc/rc.local
      cd /
-     sudo wget https://raw.githubusercontent.com/Illinois-tech-ITM/pykkon/Vagrant-Config/Shellscript/iSCSI-initiator-setup.sh
+     sudo wget https://raw.githubusercontent.com/illinoistech-itm/pykkon/Vagrant-Config/Shellscript/iSCSI-initiator-setup.sh
      sudo chmod 755 iSCSI-initiator-setup.sh
 
-     sudo wget https://raw.githubusercontent.com/Illinois-tech-ITM/pykkon/Vagrant-Config/Shellscript/iSCSI-initiator-logout.sh
+     sudo wget https://raw.githubusercontent.com/illinoistech-itm/pykkon/Vagrant-Config/Shellscript/iSCSI-initiator-logout.sh
      sudo chmod 755 iSCSI-initiator-logout.sh
 
   SHELL
