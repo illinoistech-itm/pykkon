@@ -28,7 +28,7 @@ INSTALL
 
  	- import appliance on Virtualbox. Use username as root and password as admin.
 
- 	- Insert target and initiator IPs on mitm-arp.py script and run to begin arp poisoning.
+ 	- Insert target and initiator IPs on mitm-arp.py script, located in ```bash /root/BSMP-2016-ISCSCI-Packet-Injection/Scapy ``` and run to begin arp poisoning.
 
  	- Insert target and initiator IPs and MACs on ip_forward.py and run to start the packet sniffing, forwarding and injection.
 
