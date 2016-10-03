@@ -79,7 +79,7 @@ Vagrant.configure("2") do |config|
     sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost localhost.localdomain ubuntu-xenial/' /etc/hosts
     sudo apt-get --yes update
     sudo apt-get --yes --force-yes upgrade
-    sudo route add default gw 192.168.1.1
+    #sudo route add default gw 192.168.1.1
     sudo apt-get --yes --force-yes install iscsitarget
     sudo apt-get --yes --force-yes install iscsitarget-dkms
     sudo sed -i 's/ISCSITARGET_ENABLE=false/ISCSITARGET_ENABLE=true/' /etc/default/iscsitarget
@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
     sudo echo "Target iqn.2016-06.local.iit:storage.sys0" >> /etc/iet/ietd.conf
     sudo echo "		Lun 0 Path=/dev/sda1p3,Type=fileio,ScsiId=lun0,ScsiSN=lun0" >> /etc/iet/ietd.conf
     sudo service iscsitarget restart
-    cd /
+    
     sudo wget https://raw.githubusercontent.com/illinoistech-itm/pykkon/Vagrant-Config/Shellscript/iSCSI-target-setup.sh
     sudo chmod 755 iSCSI-target-setup.sh
   SHELL
