@@ -9,10 +9,10 @@ interface = 'eth0'
 # Added by Jeremy Hajek 10/03/16
 # http://www.tutorialspoint.com/python/python_command_line_arguments.htm
 # Victim in this case is the initiator
-print "Victim IP: sys.argv[1]"
+print "Victim IP:" + sys.argv[1]
 victimIP = sys.argv[1] 
 # Gateway in this case is the target
-print "Target IP: sys.argv[2]"
+print "Target IP:" + sys.argv[2]
 gateIP = sys.argv[2] 
 
 print "\n [*] Enabling IP forwarding... \n"
