@@ -16,6 +16,6 @@ INSTALL
 1.  MiTM machine:
  + Download .ova machine on [https://drive.google.com/open?id=0B4MZu1rZKHeDaC1WUkdGc1BhZGc](https://drive.google.com/open?id=0B4MZu1rZKHeDaC1WUkdGc1BhZGc "Link to OVA")
  +  import appliance on Virtualbox. Use username as root and password as admin.
- + Insert target and initiator IPs on mitm-arp.py script, located in /root/BSMP-2016-ISCSCI-Packet-Injection/Scapy and run to begin arp poisoning.
+ + Insert target and initiator IPs on mitm-arp.py script, located in ```/root/BSMP-2016-ISCSCI-Packet-Injection/Scapy``` and run to begin arp poisoning.
  + Insert target and initiator IPs and MACs on ip_forward.py and run to start the packet sniffing, forwarding and injection.
 1. Profit!
