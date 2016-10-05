@@ -77,10 +77,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
      echo Initiator set up:
      sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost localhost.localdomain ubuntu-xenial/' /etc/hosts
-     sudo apt-get --yes --force-yes update
-     sudo apt-get --yes --force-yes upgrade
+     sudo apt-get --yes update
+     sudo apt-get --yes upgrade
      #route add default gw 192.168.1.1
-     sudo apt-get --yes --force-yes install open-iscsi
+     sudo apt-get --yes install open-iscsi
      echo "Changing archives..."
      sudo sed -i 's/node.startup = manual/# node.startup = manual/' /etc/iscsi/iscsid.conf
      sudo sed -i 's/# node.startup = automatic/node.startup = automatic/' /etc/iscsi/iscsid.conf
