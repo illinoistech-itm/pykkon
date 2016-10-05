@@ -16,7 +16,7 @@ print "Target IP:" + sys.argv[2]
 gateIP = sys.argv[2] 
 
 print "\n [*] Enabling IP forwarding... \n"
-os.system("echo 0 > /proc/sys/net/ipv4/ip_forward")
+os.system("echo 1 > /proc/sys/net/ipv4/ip_forward")
 
 # Send an ARP request with the destination
 def get_mac(IP):
