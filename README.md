@@ -3,33 +3,18 @@ This is a repo that contains code for creating a system to hijack and insert dat
 
 INSTALL
 ------------
-1) Open Target and Initiator folders containing .Vagrantfile  and run: ```$ bash vagrant up```
-
-1)  On Initiator, run:
-
+1. Open Target and Initiator folders containing .Vagrantfile  and run: ```$ bash vagrant up```
+1.  On Initiator, run:
 	+  Run the iSCSI-initiator-setup.sh in the root folder. That script contains commands to discover and login to a target LUN. You have to provide the target machine IP as required by the script.
-
 	+  after login, a disk is created to represent the iSCSI target LUN.	Such disk can be on sdb, sdc or sdd, accordingly with the order it was found. Check which one represents the iSCSI Target LUN running the command "sudo fdisk -l". The disk representing the iSCSI Target LUN has 2MB of size.
-
-   + Once the disk was identified, open /mnt directory to access the Target LUN. A mounting command was issued to serve the disk in such folder.
-
-1)  On Target:
-
+    + Once the disk was identified, open /mnt directory to access the Target LUN. A mounting command was issued to serve the disk in such folder.
+1.  On Target:
 +  make sure iscsitarget service is running:
-
 	```$ bash netstat -tl```
-
  +  download, add execution permissions and run the iSCSI-target-setup.sh if you want to test a new file being available in the LUN 0. Also run the script on up after halting the machine.
-
-
-1)  MiTM machine:
-
+1.  MiTM machine:
  + Download .ova machine on https://drive.google.com/open?id=0B4MZu1rZKHeDaC1WUkdGc1BhZGc
-
  +  import appliance on Virtualbox. Use username as root and password as admin.
-
  + Insert target and initiator IPs on mitm-arp.py script, located in /root/BSMP-2016-ISCSCI-Packet-Injection/Scapy and run to begin arp poisoning.
-
  + Insert target and initiator IPs and MACs on ip_forward.py and run to start the packet sniffing, forwarding and injection.
-
-1) Profit!
+1. Profit!
